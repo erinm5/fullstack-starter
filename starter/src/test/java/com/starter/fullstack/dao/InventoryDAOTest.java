@@ -76,7 +76,7 @@ public class InventoryDAOTest {
   }
 
   /**
-   * Test Create method.
+   * Test Remove method.
    */
   @Test
   public void remove() {
@@ -93,5 +93,44 @@ public class InventoryDAOTest {
     Optional<Inventory> deletedInventory = this.inventoryDAO.delete(newInventory.getId());
     Assert.assertNotNull(deletedInventory);
     Assert.assertEquals(0, this.mongoTemplate.findAll(Inventory.class).size());
+  }
+
+  /**
+   * Test Retrieve method.
+   */
+  @Test
+  public void retrieve() {
+    String INVENTORY_NAME = "Inventory to Find";
+
+    // Create and add inventory to db
+    Inventory newInventory = new Inventory();
+    newInventory.setName(INVENTORY_NAME);
+    newInventory.setProductType(PRODUCT_TYPE);
+    newInventory = this.inventoryDAO.create(newInventory);
+
+    // Check if successfully removed from db
+    Optional<Inventory> retrievedInventory = this.inventoryDAO.retrieve(newInventory.getId());
+    Assert.assertNotNull(retrievedInventory);
+    if (retrievedInventory.isPresent())
+      Assert.assertEquals(retrievedInventory.get(), newInventory);
+  }
+
+  /**
+   * Test Remove method.
+   */
+  @Test
+  public void update() {
+    Inventory origInventory = new Inventory();
+    origInventory.setName("Original Inventory");
+    origInventory.setProductType(PRODUCT_TYPE);
+    origInventory = this.inventoryDAO.create(origInventory);
+    Inventory moddedInventory = origInventory;
+    moddedInventory.setName("Modified Inventory");
+
+    // Check if successfully updated from db
+    Optional<Inventory> modified = this.inventoryDAO.update(origInventory.getId(), moddedInventory);
+    Assert.assertNotNull(modified);
+    if (modified.isPresent())
+      Assert.assertNotEquals(origInventory, modified.get());
   }
 }
