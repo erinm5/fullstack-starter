@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { openAlert }  from '../alerts'
 import { createAction, handleActions } from 'redux-actions'
+import { openAlert,openError }  from '../alerts'
 
 const actions = {
   INVENTORY_GET_ALL: 'inventory/get_all',
@@ -34,11 +34,11 @@ export const createInventory = createAction(actions.INVENTORY_CREATE, (inventory
       const invs = []
       getState().inventories.all.forEach(inv => {
         if (inv.id !== suc.data.id) {
-          invs.push(inv) 
+          invs.push(inv)
         }
       })
-      invs.push(suc.data) 
-      dispatch(refreshInventory(invs)) 
+      invs.push(suc.data)
+      dispatch(refreshInventory(invs))
       dispatch(openAlert('Inventory successfully added.'))
     }).catch(error => {
       dispatch(openError('Failed to add inventory.'))
