@@ -37,7 +37,7 @@ public class InventoryController {
    * @return Saved Inventory.
    */
   @PostMapping
-  public Inventory createInventory(Inventory inventory) {
+  public Inventory createInventory(@RequestBody Inventory inventory) {
     return this.inventoryDAO.create(inventory);
   }
 
@@ -70,7 +70,7 @@ public class InventoryController {
    * @return Retrieved Inventory.
    */
   @PutMapping("/{id}")
-  public Optional<Inventory> updateInventory(Inventory inventory , @PathVariable String id) {
+  public Optional<Inventory> updateInventory(@RequestBody Inventory inventory , @PathVariable String id) {
     Assert.notNull(id, "Inventory Id was not provided");
     return this.inventoryDAO.update(id, inventory);
   }

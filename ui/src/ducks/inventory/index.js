@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { createAction, handleActions } from 'redux-actions'
-import { openAlert,openError }  from '../alerts'
+import { openAlert,openError } from '../alerts'
 
 const actions = {
   INVENTORY_GET_ALL: 'inventory/get_all',
@@ -32,7 +32,7 @@ export const createInventory = createAction(actions.INVENTORY_CREATE, (inventory
     .post(`${config.restAPIUrl}/inventory`, inventory)
     .then((suc) => {
       const invs = []
-      getState().inventories.all.forEach(inv => {
+      getState().inventory.all.forEach(inv => {
         if (inv.id !== suc.data.id) {
           invs.push(inv)
         }
@@ -93,7 +93,8 @@ export const removeInventory = createAction(actions.INVENTORY_DELETE, (id) =>
 
 export const refreshInventory = createAction(actions.INVENTORY_REFRESH, (payload) =>
   (dispatcher, getState, config) =>
-    payload.sort((inventoryA, inventoryB) => inventoryA.name < inventoryB.name ? -1 : inventoryA.name > inventoryB.name ? 1 : 0)
+    payload.sort((inventoryA, inventoryB) =>
+      inventoryA.name < inventoryB.name ? -1 : inventoryA.name > inventoryB.name ? 1 : 0)
 )
 
 
