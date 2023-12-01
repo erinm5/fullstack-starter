@@ -1,6 +1,6 @@
 package com.starter.fullstack.dao;
-
 import com.starter.fullstack.api.Inventory;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Resource;
@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.utility.DockerImageName;
 
-/**
+ /**
  * Test Inventory DAO.
  */
 @DataMongoTest
@@ -75,23 +75,26 @@ public class InventoryDAOTest {
     Assert.assertNotEquals(addedInventory.getId(), origId);
   }
 
-  /**
-   * Test Remove method.
-   */
   @Test
   public void remove() {
-    String INVENTORY_NAME = "Worst Inventory Ever";
+    Inventory inventoryOne = new Inventory();
+    inventoryOne.setName(NAME);
+    inventoryOne.setProductType(PRODUCT_TYPE);
+    this.inventoryDAO.create(inventoryOne);
 
-    // Create and add inventory to db
-    Inventory newInventory = new Inventory();
-    newInventory.setName(INVENTORY_NAME);
-    newInventory.setProductType(PRODUCT_TYPE);
-    newInventory = this.inventoryDAO.create(newInventory);
-    Assert.assertEquals(1, this.mongoTemplate.findAll(Inventory.class).size());
+    String INVENTORY_NAME = "Second is the Best";
+    Inventory inventoryTwo = new Inventory();
+    inventoryTwo.setName(INVENTORY_NAME);
+    inventoryTwo.setProductType(PRODUCT_TYPE);
+    this.inventoryDAO.create(inventoryTwo);
+    Assert.assertEquals(2, this.mongoTemplate.findAll(Inventory.class).size());
+
+    List<String> ids = new ArrayList<String>();
+    ids.add(inventoryOne.getId());
+    ids.add(inventoryTwo.getId());
 
     // Check if successfully removed from db
-    Optional<Inventory> deletedInventory = this.inventoryDAO.delete(newInventory.getId());
-    Assert.assertNotNull(deletedInventory);
+    this.inventoryDAO.delete(ids);
     Assert.assertEquals(0, this.mongoTemplate.findAll(Inventory.class).size());
   }
 
@@ -111,12 +114,13 @@ public class InventoryDAOTest {
     // Check if successfully removed from db
     Optional<Inventory> retrievedInventory = this.inventoryDAO.retrieve(newInventory.getId());
     Assert.assertNotNull(retrievedInventory);
-    if (retrievedInventory.isPresent())
+    if (retrievedInventory.isPresent()) {
       Assert.assertEquals(retrievedInventory.get(), newInventory);
+    }
   }
 
   /**
-   * Test Remove method.
+   * Test Update method.
    */
   @Test
   public void update() {
@@ -130,7 +134,8 @@ public class InventoryDAOTest {
     // Check if successfully updated from db
     Optional<Inventory> modified = this.inventoryDAO.update(origInventory.getId(), moddedInventory);
     Assert.assertNotNull(modified);
-    if (modified.isPresent())
+    if (modified.isPresent()) {
       Assert.assertNotEquals(origInventory, modified.get());
+    }
   }
 }

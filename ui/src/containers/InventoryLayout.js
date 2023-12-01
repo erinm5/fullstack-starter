@@ -2,6 +2,7 @@ import * as inventoryDuck from '../ducks/inventory'
 import * as productDuck from '../ducks/products'
 import Checkbox from '@material-ui/core/Checkbox'
 import Grid from '@material-ui/core/Grid'
+import InventoryDeleteModal from '../components/Inventory/InventoryDeleteModal'
 import InventoryFormModal from '../components/Inventory/InventoryFormModal'
 import { makeStyles } from '@material-ui/core/styles'
 import { MeasurementUnits } from '../constants/units'
@@ -51,6 +52,8 @@ const InventoryLayout = (props) => {
   const products = useSelector(state => state.products.all)
   const isFetched = useSelector(state => state.inventory.fetched && state.products.fetched)
   const createInventory = useCallback(inventory => { dispatch(inventoryDuck.createInventory(inventory)) }, [dispatch])
+  const removeInventory = useCallback(selected => {
+    dispatch(inventoryDuck.removeInventory(selected)) }, [dispatch])
 
   useEffect(() => {
     if (!isFetched) {
@@ -64,13 +67,19 @@ const InventoryLayout = (props) => {
   const [orderBy, setOrderBy] = React.useState('calories')
   const [selected, setSelected] = React.useState([])
   const [isCreateOpen, setCreateOpen] = React.useState(false)
+  const [isDeleteOpen, setDeleteOpen] = React.useState(false)
 
   const toggleCreate = () => {
     setCreateOpen(true)
   }
 
+  const toggleDelete = () => {
+    setDeleteOpen(true)
+  }
+
   const toggleModals = (resetSelected) => {
     setCreateOpen(false)
+    setDeleteOpen(false)
     if (resetSelected) {
       setSelected([])
     }
@@ -118,6 +127,7 @@ const InventoryLayout = (props) => {
           numSelected={selected.length}
           title='Inventory'
           toggleCreate={toggleCreate}
+          toggleDelete={toggleDelete}
         />
         <TableContainer component={Paper}>
           <Table size='small' stickyHeader>
@@ -174,6 +184,12 @@ const InventoryLayout = (props) => {
             }}
             productOptions={products}
             unitOfMeasurementOptions={MeasurementUnits}
+          />
+          <InventoryDeleteModal
+            isDialogOpen={isDeleteOpen}
+            handleDelete={removeInventory}
+            handleDialog={toggleModals}
+            initialValues={selected}
           />
         </TableContainer>
       </Grid>

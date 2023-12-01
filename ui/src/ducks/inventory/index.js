@@ -61,7 +61,7 @@ export const updateInventory = createAction(actions.INVENTORY_UPDATE, (inventory
     .put(`${config.restAPIUrl}/inventory/${id}`, inventory)
     .then((suc) => {
       const invs = []
-      getState().inventories.all.forEach(inv => {
+      getState().inventory.all.forEach(inv => {
         if (inv.id !== id) {
           invs.push(inv)
         }
@@ -74,13 +74,13 @@ export const updateInventory = createAction(actions.INVENTORY_UPDATE, (inventory
     })
 )
 
-export const removeInventory = createAction(actions.INVENTORY_DELETE, (id) =>
+export const removeInventory = createAction(actions.INVENTORY_DELETE, (ids) =>
   (dispatch, getState, config) => axios
-    .delete(`${config.restAPIUrl}/inventory/{id}`, id)
+    .delete(`${config.restAPIUrl}/inventory`, { data: ids })
     .then((suc) => {
       const invs = []
-      getState().inventories.all.forEach(inv => {
-        if (inv.id !== suc.data.id) {
+      getState().inventory.all.forEach(inv => {
+        if (!ids.includes(inv.id)) {
           invs.push(inv)
         }
       })
