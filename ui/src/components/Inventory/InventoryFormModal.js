@@ -51,7 +51,9 @@ class InventoryFormModal extends React.Component {
         onClose={() => { handleDialog(false) }}
       >
         <Formik
+          validateOnMount
           initialValues={initialValues}
+          initialTouched={{ name: true, productType: true, unitOfMeasurement: true }}
           validationSchema={inventoryValidation}
           onSubmit={values => {
             handleInventory(normalizeInventory(values))
