@@ -1,5 +1,4 @@
 package com.starter.fullstack.dao;
-
 import com.starter.fullstack.api.Inventory;
 import java.util.List;
 import java.util.Optional;
@@ -53,8 +52,8 @@ public class InventoryDAO {
    * @return Created/Updated Inventory.
    */
   public Inventory create(Inventory inventory) {
-      inventory.setId(null);
-      return this.mongoTemplate.save(inventory, "inventory");
+    inventory.setId(null);
+    return this.mongoTemplate.save(inventory, "inventory");
   }
 
   /**
@@ -80,13 +79,11 @@ public class InventoryDAO {
   }
 
   /**
-   * Delete Inventory By Id.
-   * @param id Id of Inventory.
-   * @return Deleted Inventory.
+   * Delete Inventory By Ids.
+   * @param ids Ids of Inventory.
    */
-  public Optional<Inventory> delete(String id) {
-    Query query = new Query().addCriteria(Criteria.where("_id").is(id));
-    Inventory removedInventory = this.mongoTemplate.findAndRemove(query, Inventory.class,"inventory");
-    return Optional.ofNullable(removedInventory);
+  public void delete(List<String> ids) {
+    Query query = new Query().addCriteria(Criteria.where("_id").in(ids));
+    this.mongoTemplate.remove(query, Inventory.class);
   }
 }
