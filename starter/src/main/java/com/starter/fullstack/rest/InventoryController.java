@@ -59,7 +59,7 @@ public class InventoryController {
    * @return Retrieved Inventory.
    */
   @GetMapping("/{id}")
-  public Optional<Inventory> retrieveInventoryById(@PathVariable String id) {
+  public Optional<Inventory> retrieveInventoryById(@PathVariable @RequestBody String id) {
     Assert.notNull(id, "Inventory Id was not provided");
     return this.inventoryDAO.retrieve(id);
   }
@@ -71,7 +71,7 @@ public class InventoryController {
    * @return Retrieved Inventory.
    */
   @PutMapping("/{id}")
-  public Optional<Inventory> updateInventory(@RequestBody Inventory inventory , @PathVariable String id) {
+  public Optional<Inventory> updateInventory(@RequestBody Inventory inventory , @RequestBody  @PathVariable String id) {
     Assert.notNull(id, "Inventory Id was not provided");
     return this.inventoryDAO.update(id, inventory);
   }
