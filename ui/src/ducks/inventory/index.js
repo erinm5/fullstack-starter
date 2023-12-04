@@ -62,7 +62,7 @@ export const updateInventory = createAction(actions.INVENTORY_UPDATE, (inventory
     .then((suc) => {
       const invs = []
       getState().inventory.all.forEach(inv => {
-        if (inv.id !== id) {
+        if (inv.id !== suc.data.id) {
           invs.push(inv)
         }
       })
