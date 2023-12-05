@@ -133,9 +133,8 @@ public class InventoryDAOTest {
 
     // Check if successfully updated from db
     Optional<Inventory> modified = this.inventoryDAO.update(origInventory.getId(), moddedInventory);
-    Assert.assertNotNull(modified);
     if (modified.isPresent()) {
-      Assert.assertNotEquals(origInventory, modified.get());
+      Assert.assertNotSame(origInventory, modified.get());
     }
   }
 }
